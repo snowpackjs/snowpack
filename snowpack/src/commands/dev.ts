@@ -866,8 +866,6 @@ export async function startServer(
     const matchedRouteHandler = matchRouteHandler(reqUrl, 'upgrade');
     if (matchedRouteHandler) {
       matchedRouteHandler(req, socket, head);
-      // NOTE(fks): Why do we destory the socket here? Is it so that HMR client doesn't hijack?
-      socket.destroy();
       return;
     }
   }
