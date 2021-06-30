@@ -61,6 +61,10 @@
   "devDependencies": {
     "@npmcli/arborist": "^2.2.9",
     "@types/cheerio": "0.22.22",
+    "acorn": "^8.1.0",
+    "acorn-class-fields": "^1.0.0",
+    "acorn-private-methods": "^1.0.0",
+    "acorn-static-class-features": "^1.0.0",
     "bufferutil": "^4.0.2",
     "cachedir": "^2.3.0",
     "cheerio": "1.0.0-rc.10",
@@ -83,7 +87,6 @@
     "isbinaryfile": "^4.0.6",
     "jsonschema": "~1.2.5",
     "kleur": "^4.1.1",
-    "meriyah": "^3.1.6",
     "mime-types": "^2.1.26",
     "mkdirp": "^1.0.3",
     "npm-run-path": "^4.0.1",

@@ -5,6 +5,10 @@ import {sourcemap_stacktrace} from './sourcemaps';
 import {transform} from './transform';
 import {REQUIRE_OR_IMPORT} from '../util';
 
+// The AsyncFunction constructor creates a new async function object. 
+// AsyncFunction is not a global object, so we create a reference this way:
+const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+
 // This function makes it possible to load modules from the snowpack server, for the sake of SSR.
 export function createLoader({config, load}: ServerRuntimeConfig): ServerRuntime {
   const cache = new Map();
@@ -118,10 +122,10 @@ export function createLoader({config, load}: ServerRuntimeConfig): ServerRuntime
       )),
     ];
 
-    const fn = new Function(...args.map((d) => d.name), `${code}\n//# sourceURL=${url}`);
+    const fn = new AsyncFunction(...args.map((d) => d.name), `${code}\n//# sourceURL=${url}`);
 
     try {
-      fn(...args.map((d) => d.value));
+      await fn(...args.map((d) => d.value));
     } catch (e) {
       e.stack = await sourcemap_stacktrace(e.stack, async (address) => {
         if (existsSync(address)) {

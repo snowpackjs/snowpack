@@ -4349,6 +4349,13 @@ accepts@^1.3.5, accepts@~1.3.4:
     mime-types "~2.1.24"
     negotiator "0.6.2"
 
+acorn-class-fields@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/acorn-class-fields/-/acorn-class-fields-1.0.0.tgz#b413793e6b3ddfcd17a02f9c7a850f4bbfdc1c7a"
+  integrity sha512-l+1FokF34AeCXGBHkrXFmml9nOIRI+2yBnBpO5MaVAaTIJ96irWLtcCxX+7hAp6USHFCe+iyyBB4ZhxV807wmA==
+  dependencies:
+    acorn-private-class-elements "^1.0.0"
+
 acorn-globals@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/acorn-globals/-/acorn-globals-3.1.0.tgz#fd8270f71fbb4996b004fa880ee5d46573a731bf"
@@ -4363,6 +4370,25 @@ acorn-globals@^6.0.0:
   dependencies:
     acorn "^7.1.1"
     acorn-walk "^7.1.1"
+
+acorn-private-class-elements@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/acorn-private-class-elements/-/acorn-private-class-elements-1.0.0.tgz#c5805bf8a46cd065dc9b3513bfebb504c88cd706"
+  integrity sha512-zYNcZtxKgVCg1brS39BEou86mIao1EV7eeREG+6WMwKbuYTeivRRs6S2XdWnboRde6G9wKh2w+WBydEyJsJ6mg==
+
+acorn-private-methods@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/acorn-private-methods/-/acorn-private-methods-1.0.0.tgz#b48f4c03a151cc8262f6f5ca8f57f7c5ac245184"
+  integrity sha512-Jou2L3nfwfPpFdmmHObI3yUpVPM1bPohTUAZCyVDw5Efyn9LSS6E36neRLCRfIr8QjskAfdxRdABOrvP4c/gwQ==
+  dependencies:
+    acorn-private-class-elements "^1.0.0"
+
+acorn-static-class-features@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/acorn-static-class-features/-/acorn-static-class-features-1.0.0.tgz#ab9d862d5b184007ed509f5a8d031b837694ace2"
+  integrity sha512-XZJECjbmMOKvMHiNzbiPXuXpLAJfN3dAKtfIYbk1eHiWdsutlek+gS7ND4B8yJ3oqvHo1NxfafnezVmq7NXK0A==
+  dependencies:
+    acorn-private-class-elements "^1.0.0"
 
 acorn-walk@^7.1.1:
   version "7.2.0"
@@ -4393,6 +4419,11 @@ acorn@^8.2.4:
   version "8.4.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.4.1.tgz#56c36251fc7cabc7096adc18f05afe814321a28c"
   integrity sha512-asabaBSkEKosYKMITunzX177CXxQ4Q8BSSzMTKD+FefUhipQC70gfW5SiUDhYQ3vk8G+81HqQk7Fv9OXwwn9KA==
+
+acorn@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.1.0.tgz#52311fd7037ae119cbb134309e901aa46295b3fe"
+  integrity sha512-LWCF/Wn0nfHOmJ9rzQApGnxnvgfROzGilS8936rqN/lfcYkY9MYZzdMqN+2NJ4SlTc+m5HiSa+kNfDtI64dwUA==
 
 address@^1.0.1:
   version "1.1.2"
@@ -10839,11 +10870,6 @@ merge2@^1.2.3, merge2@^1.3.0:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
-
-meriyah@^3.1.6:
-  version "3.1.6"
-  resolved "https://registry.yarnpkg.com/meriyah/-/meriyah-3.1.6.tgz#56c9c0edb63f9640c7609a39a413c60b038e4451"
-  integrity sha512-JDOSi6DIItDc33U5N52UdV6P8v+gn+fqZKfbAfHzdWApRQyQWdcvxPvAr9t01bI2rBxGvSrKRQSCg3SkZC1qeg==
 
 micromatch@^3.1.10, micromatch@^3.1.4:
   version "3.1.10"

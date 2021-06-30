@@ -1,14 +1,29 @@
-import * as meriyah from 'meriyah';
+import * as acorn from 'acorn';
+import acornPluginStage3ClassFields from 'acorn-class-fields';
+import acornPluginStage3PrivateMethods from 'acorn-private-methods';
+import acornPluginStage3ClassFeatures from 'acorn-static-class-features';
 import MagicString from 'magic-string';
 import {analyze, extract_names} from 'periscopic';
 import {walk} from 'estree-walker';
 import is_reference from 'is-reference';
 
+const acornParser = acorn.Parser.extend(
+  acornPluginStage3ClassFields,
+  acornPluginStage3PrivateMethods,
+  acornPluginStage3ClassFeatures,
+);
+
 export function transform(data) {
   const code = new MagicString(data);
-  const ast: any = meriyah.parseModule(data, {
-    ranges: true,
-    next: true,
+
+  // TODO: Bring back mariyah - https://github.com/meriyah/meriyah/issues/186
+  // const ast: any = meriyah.parseModule(data, {ranges: true, next: true});
+
+  const ast: any = acornParser.parse(data, {
+    sourceType: 'module',
+    ecmaVersion: 2021,
+    locations: true,
+    allowAwaitOutsideFunction: true,
   });
 
   const {map, scope} = analyze(ast);
