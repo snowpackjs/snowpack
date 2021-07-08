@@ -231,9 +231,52 @@ export interface OptimizeOptions {
   target: 'es2020' | 'es2019' | 'es2018' | 'es2017';
 }
 
+/**
+ * {@link http.IncomingMessage} as a value type -- exposes data properties
+ * without exposing access to sockets, streams, methods or iterators.
+ */
+export type Http1RequestData = Pick<
+http.IncomingMessage,
+'aborted' | 'httpVersion' | 'httpVersionMajor' | 'httpVersionMinor' | 'complete' | 'headers' | 'rawHeaders' | 'trailers' | 'rawTrailers' | 'method' | 'url'
+>
+/**
+ * {@link http2.Http2ServerRequest} as a value type -- exposes data properties
+ * without exposing access to sockets, streams, methods or iterators.
+ */
+export type Http2RequestData = Pick<
+http2.Http2ServerRequest,
+'aborted' | 'httpVersion' | 'httpVersionMajor' | 'httpVersionMinor' | 'complete' | 'headers' | 'rawHeaders' | 'trailers' | 'rawTrailers' | 'method' | 'url' | 'authority' | 'scheme'
+>
+/**
+ * {@link http.IncomingMessage} or {@link http2.Http2ServerRequest} as a value type -- exposes data properties
+ * without exposing access to sockets, streams, methods or iterators.
+ * This is provided so that users of dev-server APIs may make decisions about
+ * how to route a request (or transform its response), without being able to perform
+ * side-effects upon the request handle.
+ */
+export type HttpRequestData = Http1RequestData | Http2RequestData;
+export type DevServerResponseHeaders = http.OutgoingHttpHeaders;
+
+/**
+ * @param req the HTTP request. you can use this to check (for example) the file extension of the asset being requested.
+ * @param proposed the HTTP response headers with which snowpack dev server intends to serve the asset
+ * @returns your preferred HTTP response headers (snowpack dev server will serve the asset with these instead)
+ * See {@link import('./commands/dev').isHttp2RequestData} for how to narrow the type of {@link HttpRequestData}.
+ */
+export type HeadersTransformer = (
+  req: HttpRequestData,
+  proposed: DevServerResponseHeaders
+) => DevServerResponseHeaders;
+
 export interface RouteConfigObject {
   src: string;
   dest: string | ((req: http.IncomingMessage, res: http.ServerResponse) => void) | undefined;
+  /**
+   * This callback (if supplied) will be invoked immediately prior to snowpack dev server's
+   * writing of HTTP response headers. Use it to override the response headers, for example
+   * to change the Content-Type or CORS policies with which assets are served.
+   */
+  transformHeaders?: HeadersTransformer;
   upgrade: ((req: http.IncomingMessage, socket: net.Socket, head: Buffer) => void) | undefined;
   match: 'routes' | 'all';
   _srcRegex: RegExp;
@@ -330,7 +373,7 @@ export type SnowpackUserConfig = {
   testOptions?: Partial<SnowpackConfig['testOptions']>;
   packageOptions?: Partial<SnowpackConfig['packageOptions']>;
   optimize?: Partial<SnowpackConfig['optimize']>;
-  routes?: Pick<RouteConfigObject, 'src' | 'dest' | 'match'>[];
+  routes?: Pick<RouteConfigObject, 'src' | 'dest' | 'match' | 'transformHeaders'>[];
   experiments?: {
     /* intentionally left blank */
   };

@@ -412,7 +412,7 @@ function normalizeMount(config: SnowpackConfig) {
 }
 
 function normalizeRoutes(routes: RouteConfigObject[]): RouteConfigObject[] {
-  return routes.map(({src, dest, upgrade, match}, i) => {
+  return routes.map(({src, dest, match, ...rest}, i) => {
     // Normalize
     if (typeof dest === 'string') {
       dest = addLeadingSlash(dest);
@@ -425,7 +425,7 @@ function normalizeRoutes(routes: RouteConfigObject[]): RouteConfigObject[] {
     }
     // Validate
     try {
-      return {src, dest, upgrade, match: match || 'all', _srcRegex: new RegExp(src)};
+      return {...rest, src, dest, match: match || 'all', _srcRegex: new RegExp(src)};
     } catch (err) {
       throw new Error(`config.routes[${i}].src: invalid regular expression syntax "${src}"`);
     }
