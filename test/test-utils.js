@@ -156,3 +156,9 @@ function stripLockfile(output) {
   return stripWhitespace(stripUrlHash(output));
 }
 exports.stripLockfile = stripLockfile;
+
+/** Format JSON */
+function fmtjson(json) {
+  return JSON.stringify(json, undefined, 2);
+}
+exports.fmtjson = fmtjson;

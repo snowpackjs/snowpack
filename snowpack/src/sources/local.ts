@@ -33,12 +33,12 @@ import {installPackages} from './local-install';
 
 const CURRENT_META_FILE_CONTENTS = `.snowpack cache - Do not edit this directory!
 
-The ".snowpack" cache directory is fully managed for you by Snowpack. 
+The ".snowpack" cache directory is fully managed for you by Snowpack.
 Manual changes that you make to the files inside could break things.
 
 Commit this directory to source control to speed up cold starts.
 
-Found an issue? You can always delete the ".snowpack" 
+Found an issue? You can always delete the ".snowpack"
 directory and Snowpack will recreate it on next run.
 
 [.meta.version=2]`;
@@ -112,6 +112,7 @@ export class PackageSourceLocal implements PackageSource {
   cacheDirectory: string;
   packageSourceDirectory: string;
   memoizedResolve: Record<string, string> = {};
+  memoizedImportMap: Record<string, ImportMap> = {};
   allPackageImports: Record<string, PackageImportData> = {};
   allSymlinkImports: Record<string, string> = {};
   allKnownSpecs = new Set<string>();
@@ -425,7 +426,7 @@ export class PackageSourceLocal implements PackageSource {
   }
 
   private async buildPackageImport(spec: string, _source?: string, logLine = false, depth = 0) {
-    const {config, memoizedResolve, allKnownSpecs, allPackageImports} = this;
+    const {config, memoizedResolve, memoizedImportMap, allKnownSpecs, allPackageImports} = this;
     const source = _source || this.packageSourceDirectory;
     const aliasEntry = findMatchingAliasEntry(config, spec);
     if (aliasEntry && aliasEntry.type === 'package') {
@@ -466,6 +467,9 @@ export class PackageSourceLocal implements PackageSource {
       ],
     });
 
+    // if this has already been memoized, exit
+    if (memoizedResolve[entrypoint]) return memoizedResolve[entrypoint];
+
     let rootPackageDirectory = getRootPackageDirectory(entrypoint);
     if (!rootPackageDirectory) {
       const rootPackageManifestLoc = await findUp('package.json', {cwd: entrypoint});
@@ -494,13 +498,10 @@ export class PackageSourceLocal implements PackageSource {
       const lineBullet = colors.dim(depth === 0 ? '+' : '└──'.padStart(depth * 2 + 1, ' '));
       let packageFormatted = spec + colors.dim('@' + packageVersion);
       const existingImportMapLoc = path.join(installDest, 'import-map.json');
-      const importMapHandle = await fs.open(existingImportMapLoc, 'r+').catch(() => null);
-
-      let existingImportMap: ImportMap | null = null;
-      if (importMapHandle) {
-        const importMapData = await importMapHandle.readFile('utf-8');
-        existingImportMap = importMapData ? JSON.parse(importMapData) : null;
-        await importMapHandle.close();
+      let existingImportMap: ImportMap | undefined = memoizedImportMap[packageName];
+      if (!existingImportMap && existsSync(existingImportMapLoc)) {
+        existingImportMap = JSON.parse(await fs.readFile(existingImportMapLoc, 'utf8'));
+        memoizedImportMap[packageName] = existingImportMap as ImportMap;
       }
 
       // Kick off a build, if needed.
@@ -624,20 +625,24 @@ export class PackageSourceLocal implements PackageSource {
       const dependencyFileLoc = path.join(installDest, importMap.imports[spec]);
       const loadedFile = await fs.readFile(dependencyFileLoc!);
       if (isJavaScript(dependencyFileLoc)) {
-        const packageImports = new Set<string>();
+        const newPackageImports = new Set<string>();
         const code = loadedFile.toString('utf8');
         for (const imp of await scanCodeImportsExports(code)) {
-          const spec = code.substring(imp.s, imp.e).replace(/(\/|\\)+$/, ''); // remove trailing slash from end of specifier (easier for Node to resolve)
-          if (isRemoteUrl(spec)) {
+          const scannedImport = code.substring(imp.s, imp.e).replace(/(\/|\\)+$/, ''); // remove trailing slash from end of specifier (easier for Node to resolve)
+          if (isRemoteUrl(scannedImport)) {
+            continue; // ignore remote files
+          }
+          if (isPathImport(scannedImport)) {
             continue;
           }
-          if (isPathImport(spec)) {
-            continue;
+          const [scannedPackageName] = parsePackageImportSpecifier(scannedImport);
+          if (scannedPackageName && memoizedImportMap[scannedPackageName]) {
+            continue; // if we’ve already installed this, then don’t reinstall
           }
-          packageImports.add(spec);
+          newPackageImports.add(scannedImport);
         }
 
-        for (const packageImport of packageImports) {
+        for (const packageImport of newPackageImports) {
           await this.buildPackageImport(packageImport, entrypoint, logLine, depth + 1);
         }
       }
