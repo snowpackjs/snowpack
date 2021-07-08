@@ -52,6 +52,7 @@
     "p-queue": "^6.2.1",
     "rimraf": "^3.0.0",
     "rollup": "~2.37.1",
+    "tar": "^6.1.0",
     "validate-npm-package-name": "^3.0.0"
   }
 }
