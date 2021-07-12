@@ -7,7 +7,7 @@ const path = require('path');
  * @param {string} url
  */
 function isTestRunnerFile(url) {
-  return url.startsWith('/__web-dev-server') || url.startsWith('/__web-test-runner');
+  return url.includes('/__web-dev-server')|| url.includes('/__web-test-runner')
 }
 
 module.exports = function () {
