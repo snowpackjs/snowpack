@@ -22,13 +22,13 @@ import {
   createInstallTarget,
   findMatchingAliasEntry,
   getExtension,
-  GLOBAL_CACHE_DIR,
   isJavaScript,
   isPathImport,
   isRemoteUrl,
   parsePackageImportSpecifier,
   readFile,
 } from '../util';
+import {GLOBAL_CACHE_DIR} from './util';
 import {installPackages} from './local-install';
 
 const CURRENT_META_FILE_CONTENTS = `.snowpack cache - Do not edit this directory!

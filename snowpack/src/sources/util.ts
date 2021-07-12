@@ -3,6 +3,9 @@ import {PackageSourceLocal} from './local';
 import {PackageSourceRemote} from './remote';
 import path from 'path';
 import rimraf from 'rimraf';
+import globalCacheDir from 'cachedir';
+
+export const GLOBAL_CACHE_DIR = globalCacheDir('snowpack');
 
 export async function clearCache() {
   return Promise.all([

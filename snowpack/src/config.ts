@@ -23,17 +23,16 @@ import {
 import {
   addLeadingSlash,
   addTrailingSlash,
-  GLOBAL_CACHE_DIR,
   NATIVE_REQUIRE,
   REQUIRE_OR_IMPORT,
   removeTrailingSlash,
   isPathImport,
 } from './util';
+import {GLOBAL_CACHE_DIR} from './sources/util';
 import type {Awaited} from './util';
 
 const CONFIG_NAME = 'snowpack';
 const ALWAYS_EXCLUDE = ['**/_*.{sass,scss}', '**.d.ts'];
-
 const DEFAULT_PROJECT_CACHE_DIR =
   projectCacheDir({name: 'snowpack'}) ||
   // If `projectCacheDir()` is null, no node_modules directory exists.

@@ -1,4 +1,3 @@
-import globalCacheDir from 'cachedir';
 import etag from 'etag';
 import execa from 'execa';
 import findUp from 'find-up';
@@ -14,6 +13,7 @@ import type {ImportMap, LockfileManifest, SnowpackConfig} from './types';
 import type {InstallTarget} from 'esinstall';
 import {SkypackSDK} from 'skypack';
 import {REMOTE_PACKAGE_ORIGIN} from './config';
+import {GLOBAL_CACHE_DIR} from './sources/util';
 
 // (!) Beware circular dependencies! No relative imports!
 // Because this file is imported from so many different parts of Snowpack,
@@ -21,7 +21,6 @@ import {REMOTE_PACKAGE_ORIGIN} from './config';
 // circular dependencies (sometimes only visible in the final bundled build.)
 export const IS_DOTFILE_REGEX = /\/\.[^\/]+$/; // note: always assume forward-slashes, even on Windows
 
-export const GLOBAL_CACHE_DIR = globalCacheDir('snowpack');
 export const LOCKFILE_NAME = 'snowpack.deps.json';
 
 // We need to use eval here to prevent Rollup from detecting this use of `require()`
