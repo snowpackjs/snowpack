@@ -10,27 +10,26 @@ description: How to use PostCSS in your Snowpack project.
 
 [PostCSS](https://postcss.org/) is a popular CSS transpiler with support for [a huge ecosystem of plugins.](https://github.com/postcss/postcss#plugins)
 
-**To use PostCSS with Snowpack:** add the [@snowpack/plugin-postcss](https://www.npmjs.com/package/@snowpack/plugin-postcss) plugin to your project.
+**To use PostCSS with Snowpack:** Install [@snowpack/plugin-postcss](https://www.npmjs.com/package/@snowpack/plugin-postcss), [PostCSS](https://www.npmjs.com/package/postcss), and your PostCSS plugins, then add this plugin to your Snowpack config.
 
-```diff
-  // snowpack.config.mjs
-  export default {
-    plugins: [
-+    '@snowpack/plugin-postcss',
-    ],
-  };
+```js
+// snowpack.config.mjs
+export default {
+  plugins: ['@snowpack/plugin-postcss'],
+};
 ```
 
-PostCSS requires a [`postcss.config.js`](https://github.com/postcss/postcss#usage) file in your project. By default, the plugin looks in the root directory of your project, but you can customize this yourself with the `config` option. See [the plugin README](https://www.npmjs.com/package/@snowpack/plugin-postcss) for all available options.
+Lastly, add a `postcss.config.js` file. By default, @snowpack/plugin-postcss looks for this in the root directory of your project, but you can customize this with the `config` option. See [the plugin README](https://www.npmjs.com/package/@snowpack/plugin-postcss) for all available options.
 
 ```js
 // postcss.config.js
-// Example (empty) postcss config file
 module.exports = {
   plugins: [
-    // ...
+    // Replace below with your plugins
+    require('cssnano'),
+    require('postcss-preset-env')
   ],
 };
 ```
 
-Be aware that this plugin will run on all CSS in your project, including any files that compiled to CSS (like `.scss` Sass files, for example).
+Be aware that this plugin will run on all CSS in your project, including any files that compiled to CSS (like `.scss` Sass files).

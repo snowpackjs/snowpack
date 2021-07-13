@@ -1,13 +1,13 @@
 # @snowpack/plugin-postcss
 
-Run [PostCSS](https://github.com/postcss/postcss) on all `.css` files, including ones generated from Sass, Vue, and Svelte.
+Runs [PostCSS](https://github.com/postcss/postcss) on all `.css` files, including ones generated from Sass, Vue, and Svelte.
 
 ### Usage
 
-From a terminal, run the following:
+Install @snowpack/plugin-postcss, PostCSS, and your PostCSS plugins (not shown):
 
 ```
-npm install --save-dev @snowpack/plugin-postcss postcss
+npm i -D @snowpack/plugin-postcss postcss
 ```
 
 Then add this plugin to your Snowpack config:
@@ -19,14 +19,15 @@ export default {
 };
 ```
 
-Lastly, add a `postcss.config.js` file to the root of your project as you would normally:
+Lastly, add a `postcss.config.js` file. By default, @snowpack/plugin-postcss looks for this in the root directory of your project, but you can customize this with the `config` option.
 
 ```js
-const cssnano = require('cssnano');
-const postcssPresetEnv = require('postcss-preset-env');
-
 module.exports = {
-  plugins: [cssnano(), postcssPresetEnv()],
+  plugins: [
+    // Replace below with your plugins
+    require('cssnano'),
+    require('postcss-preset-env')
+  ],
 };
 ```
 
